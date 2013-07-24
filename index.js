@@ -3,7 +3,7 @@
 var assert = require('assert');
 var path = require('path');
 var knox = require('knox');
-var through = require('through');
+var map = require('map-stream');
 var BucketList = require('bucket-list');
 
 exports.connect = function (opts) {
@@ -17,24 +17,33 @@ exports.connect = function (opts) {
   
   //
   return function (srcDir, destDir, callback) {
+    var _err = null;
+    
     callback = (typeof callback === 'function') ? callback : function () {};
     
-    return bucketList(srcDir).pipe(through(function (filePath) {
+    return bucketList(srcDir).pipe(map(function (filePath, streamCb) {
       var srcPath = path.join('/', filePath);
       var destPath = path.join('/', filePath.replace(srcDir, destDir));
+      var self = this;
       
       client.copyFile(srcPath, destPath, function(err, copyRes) {
         if (copyRes.statusCode === 200) {
           client.deleteFile('/' + filePath, function (err) {
-            if (err) self.emit('error', err);
+            console.log(filePath);
+            if (err) {
+              _err = err;
+              return streamCb(err);
+            }
+            streamCb(null, destPath);
           });
         }
         else{
-          self.emit('error', err);
+          _err = err;
+          streamCb(err);
         }
       });
-    }, function () {
-      callback();
-    }));
+    })).on('end', function () {
+      callback(_err);
+    });
   };
 };

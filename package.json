@@ -1,6 +1,6 @@
 {
   "name": "bucket-rename-dir",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Rename directories for Amazon S3 objects.",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "knox": "~0.8.4",
-    "through": "~2.3.4",
-    "bucket-list": "~0.3.3"
+    "bucket-list": "~0.3.3",
+    "map-stream": "0.0.2"
   }
 }
