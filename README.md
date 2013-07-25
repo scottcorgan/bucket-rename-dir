@@ -25,13 +25,12 @@ renameDir('some/directory/path', 'some/NEW_directory/path').pipe(process.stdout)
 
 // Callback
 renameDir('some/directory/path', 'some/NEW_directory/path', function (err, affectedObjects) {
-  /*
-   affectedObjects is an object containing key/value pairs of original object name and new object name:
+  // affectedObjects is an object containing key/value pairs
+  // of original object name and new object name:
    
-   {
-     'some/directory/path': 'some/NEW-directory/path'
-   }
-   */
+  // {
+  //   'some/directory/path': 'some/NEW-directory/path'
+  // }
 });
 
 ```
