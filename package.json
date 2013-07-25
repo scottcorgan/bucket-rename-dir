@@ -1,6 +1,6 @@
 {
   "name": "bucket-rename-dir",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Rename directories for Amazon S3 objects.",
   "main": "index.js",
   "scripts": {

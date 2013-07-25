@@ -18,7 +18,7 @@ exports.connect = function (opts) {
   //
   return function (srcDir, destDir, callback) {
     var _err = null;
-    
+    var affected = {};
     callback = (typeof callback === 'function') ? callback : function () {};
     
     return bucketList(srcDir).pipe(map(function (filePath, streamCb) {
@@ -26,6 +26,10 @@ exports.connect = function (opts) {
       var destPath = path.join('/', filePath.replace(srcDir, destDir));
       var self = this;
       
+      // Track our dir/file path changes
+      affected[filePath] = filePath.replace(srcDir, destDir)
+      
+      // Copy the file
       client.copyFile(srcPath, destPath, function(err, copyRes) {
         if (copyRes.statusCode === 200) {
           client.deleteFile('/' + filePath, function (err) {
@@ -43,7 +47,7 @@ exports.connect = function (opts) {
         }
       });
     })).on('end', function () {
-      callback(_err);
+      callback(_err, affected);
     });
   };
 };
